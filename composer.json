@@ -1,8 +1,8 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "knpuniversity/sunshinephp-rad-edition",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "Mini Symfony2 RADEdition for Symfony2",
     "autoload": {
         "psr-0": { "": "src/" }
     },
