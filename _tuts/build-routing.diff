@@ -1,0 +1,44 @@
+diff --git a/app/config/routing.yml b/app/config/routing.yml
+index e69de29..e3ff3c0 100644
+--- a/app/config/routing.yml
++++ b/app/config/routing.yml
+@@ -0,0 +1,3 @@
++app:
++    resource: "@App/Resources/config/routing.yml"
++    type:     "rad_convention"
+diff --git a/src/App/Controller/TeamController.php b/src/App/Controller/TeamController.php
+new file mode 100644
+index 0000000..53e493c
+--- /dev/null
++++ b/src/App/Controller/TeamController.php
+@@ -0,0 +1,19 @@
++<?php
++
++namespace App\Controller;
++
++use Symfony\Component\HttpFoundation\Request;
++use Symfony\Bundle\FrameworkBundle\Controller\Controller;
++use App\Entity\Team;
++
++class TeamController extends Controller
++{
++    /**
++     * @param Team[] $teams
++     * @return \Symfony\Component\HttpFoundation\Response
++     */
++    public function indexAction(array $teams)
++    {
++        return array('teams' => $teams);
++    }
++}
+diff --git a/src/App/Resources/config/routing.yml b/src/App/Resources/config/routing.yml
+new file mode 100644
+index 0000000..ce03f4e
+--- /dev/null
++++ b/src/App/Resources/config/routing.yml
+@@ -0,0 +1,4 @@
++App:Team:
++    defaults:
++        _resources:
++            "teams": {service: "app.entity.team_repository", method: "findAll"}
+\ No newline at end of file
