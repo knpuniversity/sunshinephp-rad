@@ -1,0 +1,19 @@
+diff --git a/src/App/Resources/fixtures/orm/fixtures.yml b/src/App/Resources/fixtures/orm/fixtures.yml
+new file mode 100644
+index 0000000..87d0acc
+--- /dev/null
++++ b/src/App/Resources/fixtures/orm/fixtures.yml
+@@ -0,0 +1,13 @@
++# https://github.com/nelmio/alice
++App\Entity\Player:
++    user{1..50}:
++        firstName: <firstName()>
++        lastName: <lastName()>
++        nickName: <username()>
++        team: @team*
++
++App\Entity\Team:
++    team{1..5}:
++        name: <company()>
++        description: <paragraph()>
++        isActive: true
