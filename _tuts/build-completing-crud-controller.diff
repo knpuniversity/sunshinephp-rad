@@ -1,0 +1,202 @@
+diff --git a/app/Resources/views/base.html.twig b/app/Resources/views/base.html.twig
+index aefb530..5c0f3df 100644
+--- a/app/Resources/views/base.html.twig
++++ b/app/Resources/views/base.html.twig
+@@ -34,7 +34,9 @@
+         </div>
+         <div class="collapse navbar-collapse">
+             <ul class="nav navbar-nav">
+-                
++                <li>
++                    <a href="{{ path('app_team_index') }}">Teams</a>
++                </li>
+             </ul>
+         </div>
+         <!--/.nav-collapse -->
+@@ -51,6 +53,7 @@
+ 
+ {% block javascripts %}
+     <script src="{{ asset('assets/vendor/jquery/jquery.js') }}"></script>
++    <script type="text/javascript" src="{{ asset('bundles/knprad/js/jquery-ujs.js') }}"></script>
+     <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.js') }}"></script>
+ {% endblock %}
+ 
+diff --git a/app/config/config.yml b/app/config/config.yml
+index 8eb4c07..e93f328 100644
+--- a/app/config/config.yml
++++ b/app/config/config.yml
+@@ -69,3 +69,7 @@ swiftmailer:
+     username:  "%mailer_user%"
+     password:  "%mailer_password%"
+     spool:     { type: memory }
++
++knp_rad:
++    csrf_links:
++        enabled: true
+diff --git a/src/App/Controller/TeamController.php b/src/App/Controller/TeamController.php
+index 53e493c..c0559c6 100644
+--- a/src/App/Controller/TeamController.php
++++ b/src/App/Controller/TeamController.php
+@@ -3,8 +3,8 @@
+ namespace App\Controller;
+ 
+ use Symfony\Component\HttpFoundation\Request;
+-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+ use App\Entity\Team;
++use Knp\RadBundle\Controller\Controller;
+ 
+ class TeamController extends Controller
+ {
+@@ -16,4 +16,59 @@ class TeamController extends Controller
+     {
+         return array('teams' => $teams);
+     }
++
++    /**
++     * @param Team $team
++     * @return array
++     */
++    public function showAction(Team $team)
++    {
++        return array('team' => $team);
++    }
++
++    public function editAction(Team $team)
++    {
++        $form = $this->createBoundObjectForm($team, 'edit', array(
++            'method' => 'PUT',
++            'action' => $this->generateUrl('app_team_update', array('id' => $team->getId()))
++        ));
++
++        if ($form->isValid()) {
++            $this->persist($team, true);
++            $this->addFlash('success');
++
++            return $this->redirectToRoute('app_team_show', array(
++                'id' => $team->getId()
++            ));
++        }
++
++        return ['form' => $form->createView(), 'team' => $team];
++    }
++
++    public function newAction()
++    {
++        $team = new Team();
++        $form = $this->createBoundObjectForm($team, 'new', array(
++            'method' => 'POST',
++            'action' => $this->generateUrl('app_team_create', array('id' => $team->getId()))
++        ));
++
++        if ($form->isValid()) {
++            $this->persist($team, true);
++            $this->addFlash('success');
++
++            return $this->redirectToRoute('app_team_show', array(
++                'id' => $team->getId()
++            ));
++        }
++
++        return ['form' => $form->createView(), 'team' => $team];
++    }
++
++    public function deleteAction(Team $team)
++    {
++        $this->remove($team, true);
++
++        return $this->redirectToRoute('app_team_index');
++    }
+ }
+diff --git a/src/App/Resources/views/Team/edit.html.twig b/src/App/Resources/views/Team/edit.html.twig
+new file mode 100644
+index 0000000..931a901
+--- /dev/null
++++ b/src/App/Resources/views/Team/edit.html.twig
+@@ -0,0 +1,10 @@
++{% extends '::base.html.twig' %}
++
++{% block body %}
++
++{{ form_start(form, { 'attr': {'class': 'form form-horizontal'} }) }}
++    {{ form_widget(form) }}
++    <input type="submit" class="btn" />
++{{ form_end(form) }}
++
++{% endblock body %}
+\ No newline at end of file
+diff --git a/src/App/Resources/views/Team/index.html.twig b/src/App/Resources/views/Team/index.html.twig
+index eb71e73..a80b4c5 100644
+--- a/src/App/Resources/views/Team/index.html.twig
++++ b/src/App/Resources/views/Team/index.html.twig
+@@ -1,8 +1,27 @@
+ {% extends '::base.html.twig' %}
+ 
+ {% block body %}
+-    <table>
+-{{ bootstrap_datatable( teams ) }}
++    <table class="table table-striped">
++        <thead>
++            <tr>
++                <th>Name</th>
++                <th># Players</th>
++                <th>&nbsp;</th>
++            </tr>
++        </thead>
++        <tbody>
++            {% for team in teams %}
++                <tr>
++                    <td>{{ team.name }}</td>
++                    <td>{{ team.players|length }}</td>
++                    <td>
++                        <a href="{{ path('app_team_show', {'id': team.id}) }}">Show</a>
++                    </td>
++                </tr>
++            {% endfor %}
++        </tbody>
+     </table>
+ 
+-{% endblock body %}
+\ No newline at end of file
++    <a href="{{ path('app_team_new') }}" class="btn btn-primary pull-right">New</a>
++
++{% endblock body %}
+diff --git a/src/App/Resources/views/Team/new.html.twig b/src/App/Resources/views/Team/new.html.twig
+new file mode 100644
+index 0000000..8fbea8e
+--- /dev/null
++++ b/src/App/Resources/views/Team/new.html.twig
+@@ -0,0 +1,10 @@
++{% extends '::base.html.twig' %}
++
++{% block body %}
++
++{{ form_start(form) }}
++    {{ form_widget(form) }}
++    <input type="submit" class="btn" />
++{{ form_end(form) }}
++
++{% endblock body %}
+\ No newline at end of file
+diff --git a/src/App/Resources/views/Team/show.html.twig b/src/App/Resources/views/Team/show.html.twig
+new file mode 100644
+index 0000000..41516a5
+--- /dev/null
++++ b/src/App/Resources/views/Team/show.html.twig
+@@ -0,0 +1,16 @@
++{% extends '::base.html.twig' %}
++
++{% block body %}
++
++<h1>{{ team.name }}</h1>
++
++<p>
++    {{ team.description }}
++</p>
++
++<div class="btn-group">
++    <a href="{{ path('app_team_edit', { 'id': team.id }) }}" class="btn btn-default">Edit</a>
++    <a {{ link_attr('delete') }} href="{{ path('app_team_delete', {'id': 1}) }}" class="btn btn-danger">Delete</a>
++</div>
++
++{% endblock body %}
+\ No newline at end of file
