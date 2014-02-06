@@ -1,0 +1,79 @@
+{
+    "steps": [
+        {
+            "id": "start",
+            "name": "start",
+            "description": null
+        },
+        {
+            "id": "prep-removing-acmedemobundle-stuff",
+            "name": "Prep: Removing AcmeDemoBundle stuff",
+            "description": null
+        },
+        {
+            "id": "prep-adding-knpradbundle",
+            "name": "Prep: Adding KnpRadBundle",
+            "description": null
+        },
+        {
+            "id": "prep-tweaking-configuration",
+            "name": "Prep: Tweaking configuration",
+            "description": null
+        },
+        {
+            "id": "prep-adding-the-app-bundle",
+            "name": "Prep: Adding the App Bundle",
+            "description": null
+        },
+        {
+            "id": "prep-installing-behat",
+            "name": "Prep: Installing Behat",
+            "description": null
+        },
+        {
+            "id": "prep-entities",
+            "name": "Prep: Entities",
+            "description": null
+        },
+        {
+            "id": "build-routing",
+            "name": "Build: Routing",
+            "description": null
+        },
+        {
+            "id": "build-generated-template",
+            "name": "Build: Generated template",
+            "description": null
+        },
+        {
+            "id": "build-fixtures",
+            "name": "Build: Fixtures",
+            "description": null
+        },
+        {
+            "id": "build-completing-crud-controller",
+            "name": "Build: Completing CRUD controller",
+            "description": null
+        },
+        {
+            "id": "build-add-mopabootstrapbundle",
+            "name": "Build: Add MopaBootstrapBundle",
+            "description": null
+        },
+        {
+            "id": "build-handle-flash-messages",
+            "name": "Build: Handle flash messages",
+            "description": null
+        },
+        {
+            "id": "build-adding-a-custom-collection-endpoint-wip",
+            "name": "Build: Adding a custom collection endpoint - WIP",
+            "description": null
+        },
+        {
+            "id": "build-configuring-a-service",
+            "name": "Build: Configuring a service",
+            "description": null
+        }
+    ]
+}
