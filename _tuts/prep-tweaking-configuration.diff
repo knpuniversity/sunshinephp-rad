@@ -1,0 +1,16 @@
+diff --git a/app/config/config.yml b/app/config/config.yml
+index fcfde1a..8eb4c07 100644
+--- a/app/config/config.yml
++++ b/app/config/config.yml
+@@ -57,8 +57,10 @@ doctrine:
+         # path:     "%database_path%"
+ 
+     orm:
+-        auto_generate_proxy_classes: "%kernel.debug%"
++        auto_generate_proxy_classes: %kernel.debug%
+         auto_mapping: true
++        naming_strategy: doctrine.orm.naming_strategy.underscore
++        default_repository_class: Knp\RadBundle\Doctrine\EntityRepository
+ 
+ # Swiftmailer Configuration
+ swiftmailer:
