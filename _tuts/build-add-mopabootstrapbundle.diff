@@ -1,0 +1,217 @@
+diff --git a/app/AppKernel.php b/app/AppKernel.php
+index 44bb880..896b91e 100644
+--- a/app/AppKernel.php
++++ b/app/AppKernel.php
+@@ -20,6 +20,7 @@ class AppKernel extends Kernel
+             // 3rd party bundles
+             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+             new \Knp\RadBundle\KnpRadBundle(),
++            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+ 
+             // my bundles
+             new App\App(),
+diff --git a/app/config/config.yml b/app/config/config.yml
+index e93f328..91455e3 100644
+--- a/app/config/config.yml
++++ b/app/config/config.yml
+@@ -73,3 +73,6 @@ swiftmailer:
+ knp_rad:
+     csrf_links:
+         enabled: true
++
++mopa_bootstrap:
++    form: ~
+diff --git a/composer.json b/composer.json
+index 55bb25a..9f0bf30 100644
+--- a/composer.json
++++ b/composer.json
+@@ -20,7 +20,8 @@
+         "sensio/generator-bundle": "~2.3",
+         "incenteev/composer-parameter-handler": "~2.0",
+         "knplabs/rad-bundle": "~2.3.1",
+-        "doctrine/doctrine-fixtures-bundle": "~2.2.0"
++        "doctrine/doctrine-fixtures-bundle": "~2.2.0",
++        "mopa/bootstrap-bundle": "~3.0.0@dev"
+     },
+     "require-dev": {
+         "behat/behat": "~2.5.1",
+diff --git a/composer.lock b/composer.lock
+index 3dd8935..7c6a0bd 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -3,7 +3,7 @@
+         "This file locks the dependencies of your project to a known state",
+         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+     ],
+-    "hash": "0ae147be6dc9a021f566a595eb7cb365",
++    "hash": "0e1e7660c2de817111b4cfbf34334f09",
+     "packages": [
+         {
+             "name": "doctrine/annotations",
+@@ -1078,6 +1078,123 @@
+             "time": "2013-11-14 19:48:31"
+         },
+         {
++            "name": "mopa/bootstrap-bundle",
++            "version": "v3.0.0-beta3",
++            "target-dir": "Mopa/Bundle/BootstrapBundle",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/phiamo/MopaBootstrapBundle.git",
++                "reference": "94f0628a0abff3bed46ebc640137a9f0d6bb0cff"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/phiamo/MopaBootstrapBundle/zipball/94f0628a0abff3bed46ebc640137a9f0d6bb0cff",
++                "reference": "94f0628a0abff3bed46ebc640137a9f0d6bb0cff",
++                "shasum": ""
++            },
++            "require": {
++                "mopa/composer-bridge": "~1.3",
++                "symfony/console": "~2.3",
++                "symfony/form": "~2.3",
++                "symfony/framework-bundle": "~2.3",
++                "symfony/twig-bundle": "~2.3"
++            },
++            "suggest": {
++                "craue/formflow-bundle": "~2.0",
++                "jlong/sass-twitter-bootstrap": "dev-master",
++                "knplabs/knp-menu-bundle": "~2.0@dev",
++                "knplabs/knp-paginator-bundle": "~2.3",
++                "mopa/bootstrap-sandbox-bundle": "~2.3",
++                "twbs/bootstrap": ">2.0,<4.0-dev"
++            },
++            "type": "symfony-bundle",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "3.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Mopa\\Bundle\\BootstrapBundle\\": ""
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Philipp A. Mohrenweiser",
++                    "email": "phiamo@googlemail.com",
++                    "homepage": "http://bootstrap.mohrenweiserpartner.de"
++                },
++                {
++                    "name": "Community contributions",
++                    "homepage": "https://github.com/phiamo/MopaBootstrapBundle/contributors"
++                }
++            ],
++            "description": "Easy integration of twitters bootstrap into symfony2",
++            "keywords": [
++                "bootstrap",
++                "bootstrap form",
++                "extra form",
++                "form",
++                "template"
++            ],
++            "time": "2013-10-25 11:56:03"
++        },
++        {
++            "name": "mopa/composer-bridge",
++            "version": "v1.3.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/phiamo/MopaComposerBridge.git",
++                "reference": "4ce791bfeabc5261da11cf4a949745d60dae711f"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/phiamo/MopaComposerBridge/zipball/4ce791bfeabc5261da11cf4a949745d60dae711f",
++                "reference": "4ce791bfeabc5261da11cf4a949745d60dae711f",
++                "shasum": ""
++            },
++            "require": {
++                "symfony/console": "2.*"
++            },
++            "type": "symfony-bridge",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.3.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Mopa\\Bridge\\Composer": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Philipp A. Mohrenweiser",
++                    "email": "phiamo@googlemail.com",
++                    "homepage": "http://bootstrap.mohrenweiserpartner.de"
++                },
++                {
++                    "name": "Community contributions",
++                    "homepage": "https://github.com/phiamo/MopaComposerBridge/contributors"
++                }
++            ],
++            "description": "Symfony2 Composer Bridge",
++            "homepage": "http://bootstrap.mohrenweiserpartner.de",
++            "keywords": [
++                "Symfony2",
++                "composer"
++            ],
++            "time": "2013-09-10 10:06:34"
++        },
++        {
+             "name": "nelmio/alice",
+             "version": "1.5.2",
+             "source": {
+@@ -2573,9 +2690,9 @@
+ 
+     ],
+     "minimum-stability": "stable",
+-    "stability-flags": [
+-
+-    ],
++    "stability-flags": {
++        "mopa/bootstrap-bundle": 20
++    },
+     "platform": {
+         "php": ">=5.3.3"
+     },
+diff --git a/src/App/Resources/views/Team/edit.html.twig b/src/App/Resources/views/Team/edit.html.twig
+index 931a901..efbff9c 100644
+--- a/src/App/Resources/views/Team/edit.html.twig
++++ b/src/App/Resources/views/Team/edit.html.twig
+@@ -3,7 +3,9 @@
+ {% block body %}
+ 
+ {{ form_start(form, { 'attr': {'class': 'form form-horizontal'} }) }}
+-    {{ form_widget(form) }}
++    {{ form_widget(form, {
++        'label': 'Edit team',
++    }) }}
+     <input type="submit" class="btn" />
+ {{ form_end(form) }}
+ 
+diff --git a/src/App/Resources/views/Team/new.html.twig b/src/App/Resources/views/Team/new.html.twig
+index 8fbea8e..a72785b 100644
+--- a/src/App/Resources/views/Team/new.html.twig
++++ b/src/App/Resources/views/Team/new.html.twig
+@@ -3,7 +3,9 @@
+ {% block body %}
+ 
+ {{ form_start(form) }}
+-    {{ form_widget(form) }}
++    {{ form_widget(form, {
++        'label': 'Create team'
++    }) }}
+     <input type="submit" class="btn" />
+ {{ form_end(form) }}
+ 
