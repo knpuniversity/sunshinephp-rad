@@ -1,0 +1,15 @@
+diff --git a/src/App/Resources/views/Team/index.html.twig b/src/App/Resources/views/Team/index.html.twig
+new file mode 100644
+index 0000000..eb71e73
+--- /dev/null
++++ b/src/App/Resources/views/Team/index.html.twig
+@@ -0,0 +1,8 @@
++{% extends '::base.html.twig' %}
++
++{% block body %}
++    <table>
++{{ bootstrap_datatable( teams ) }}
++    </table>
++
++{% endblock body %}
+\ No newline at end of file
