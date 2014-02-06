@@ -1,0 +1,927 @@
+diff --git a/app/AppKernel.php b/app/AppKernel.php
+index 8a569ec..8ba8509 100644
+--- a/app/AppKernel.php
++++ b/app/AppKernel.php
+@@ -20,7 +20,6 @@ class AppKernel extends Kernel
+         );
+ 
+         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+-            $bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
+             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
+             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+diff --git a/app/config/routing_dev.yml b/app/config/routing_dev.yml
+index c45f361..f793a0e 100644
+--- a/app/config/routing_dev.yml
++++ b/app/config/routing_dev.yml
+@@ -13,6 +13,3 @@ _configurator:
+ _main:
+     resource: routing.yml
+ 
+-# AcmeDemoBundle routes (to be removed)
+-_acme_demo:
+-    resource: "@AcmeDemoBundle/Resources/config/routing.yml"
+diff --git a/src/Acme/DemoBundle/AcmeDemoBundle.php b/src/Acme/DemoBundle/AcmeDemoBundle.php
+deleted file mode 100644
+index 269fc1e..0000000
+--- a/src/Acme/DemoBundle/AcmeDemoBundle.php
++++ /dev/null
+@@ -1,9 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle;
+-
+-use Symfony\Component\HttpKernel\Bundle\Bundle;
+-
+-class AcmeDemoBundle extends Bundle
+-{
+-}
+diff --git a/src/Acme/DemoBundle/Command/HelloWorldCommand.php b/src/Acme/DemoBundle/Command/HelloWorldCommand.php
+deleted file mode 100644
+index 998cbcd..0000000
+--- a/src/Acme/DemoBundle/Command/HelloWorldCommand.php
++++ /dev/null
+@@ -1,48 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\Command;
+-
+-use Symfony\Component\Console\Command\Command;
+-use Symfony\Component\Console\Input\InputArgument;
+-use Symfony\Component\Console\Input\InputInterface;
+-use Symfony\Component\Console\Output\OutputInterface;
+-
+-/**
+- * Hello World command for demo purposes.
+- *
+- * You could also extend from Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
+- * to get access to the container via $this->getContainer().
+- *
+- * @author Tobias Schultze <http://tobion.de>
+- */
+-class HelloWorldCommand extends Command
+-{
+-    /**
+-     * {@inheritdoc}
+-     */
+-    protected function configure()
+-    {
+-        $this
+-            ->setName('acme:hello')
+-            ->setDescription('Hello World example command')
+-            ->addArgument('who', InputArgument::OPTIONAL, 'Who to greet.', 'World')
+-            ->setHelp(<<<EOF
+-The <info>%command.name%</info> command greets somebody or everybody:
+-
+-<info>php %command.full_name%</info>
+-
+-The optional argument specifies who to greet:
+-
+-<info>php %command.full_name%</info> Fabien
+-EOF
+-            );
+-    }
+-
+-    /**
+-     * {@inheritdoc}
+-     */
+-    protected function execute(InputInterface $input, OutputInterface $output)
+-    {
+-        $output->writeln(sprintf('Hello <comment>%s</comment>!', $input->getArgument('who')));
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/Controller/DemoController.php b/src/Acme/DemoBundle/Controller/DemoController.php
+deleted file mode 100644
+index a99de89..0000000
+--- a/src/Acme/DemoBundle/Controller/DemoController.php
++++ /dev/null
+@@ -1,56 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\Controller;
+-
+-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+-use Symfony\Component\HttpFoundation\RedirectResponse;
+-use Symfony\Component\HttpFoundation\Request;
+-use Acme\DemoBundle\Form\ContactType;
+-
+-// these import the "@Route" and "@Template" annotations
+-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+-
+-class DemoController extends Controller
+-{
+-    /**
+-     * @Route("/", name="_demo")
+-     * @Template()
+-     */
+-    public function indexAction()
+-    {
+-        return array();
+-    }
+-
+-    /**
+-     * @Route("/hello/{name}", name="_demo_hello")
+-     * @Template()
+-     */
+-    public function helloAction($name)
+-    {
+-        return array('name' => $name);
+-    }
+-
+-    /**
+-     * @Route("/contact", name="_demo_contact")
+-     * @Template()
+-     */
+-    public function contactAction(Request $request)
+-    {
+-        $form = $this->createForm(new ContactType());
+-        $form->handleRequest($request);
+-
+-        if ($form->isValid()) {
+-            $mailer = $this->get('mailer');
+-
+-            // .. setup a message and send it
+-            // http://symfony.com/doc/current/cookbook/email.html
+-
+-            $request->getSession()->getFlashBag()->set('notice', 'Message sent!');
+-
+-            return new RedirectResponse($this->generateUrl('_demo'));
+-        }
+-
+-        return array('form' => $form->createView());
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/Controller/SecuredController.php b/src/Acme/DemoBundle/Controller/SecuredController.php
+deleted file mode 100644
+index 004fe95..0000000
+--- a/src/Acme/DemoBundle/Controller/SecuredController.php
++++ /dev/null
+@@ -1,70 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\Controller;
+-
+-use Symfony\Component\HttpFoundation\Request;
+-use Symfony\Component\Security\Core\SecurityContext;
+-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+-
+-/**
+- * @Route("/demo/secured")
+- */
+-class SecuredController extends Controller
+-{
+-    /**
+-     * @Route("/login", name="_demo_login")
+-     * @Template()
+-     */
+-    public function loginAction(Request $request)
+-    {
+-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+-            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+-        } else {
+-            $error = $request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
+-        }
+-
+-        return array(
+-            'last_username' => $request->getSession()->get(SecurityContext::LAST_USERNAME),
+-            'error'         => $error,
+-        );
+-    }
+-
+-    /**
+-     * @Route("/login_check", name="_security_check")
+-     */
+-    public function securityCheckAction()
+-    {
+-        // The security layer will intercept this request
+-    }
+-
+-    /**
+-     * @Route("/logout", name="_demo_logout")
+-     */
+-    public function logoutAction()
+-    {
+-        // The security layer will intercept this request
+-    }
+-
+-    /**
+-     * @Route("/hello", defaults={"name"="World"}),
+-     * @Route("/hello/{name}", name="_demo_secured_hello")
+-     * @Template()
+-     */
+-    public function helloAction($name)
+-    {
+-        return array('name' => $name);
+-    }
+-
+-    /**
+-     * @Route("/hello/admin/{name}", name="_demo_secured_hello_admin")
+-     * @Security("is_granted('ROLE_ADMIN')")
+-     * @Template()
+-     */
+-    public function helloadminAction($name)
+-    {
+-        return array('name' => $name);
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/Controller/WelcomeController.php b/src/Acme/DemoBundle/Controller/WelcomeController.php
+deleted file mode 100644
+index acceedf..0000000
+--- a/src/Acme/DemoBundle/Controller/WelcomeController.php
++++ /dev/null
+@@ -1,18 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\Controller;
+-
+-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+-
+-class WelcomeController extends Controller
+-{
+-    public function indexAction()
+-    {
+-        /*
+-         * The action's view can be rendered using render() method
+-         * or @Template annotation as demonstrated in DemoController.
+-         *
+-         */
+-        return $this->render('AcmeDemoBundle:Welcome:index.html.twig');
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/DependencyInjection/AcmeDemoExtension.php b/src/Acme/DemoBundle/DependencyInjection/AcmeDemoExtension.php
+deleted file mode 100644
+index 6dfcc82..0000000
+--- a/src/Acme/DemoBundle/DependencyInjection/AcmeDemoExtension.php
++++ /dev/null
+@@ -1,22 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\DependencyInjection;
+-
+-use Symfony\Component\DependencyInjection\ContainerBuilder;
+-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+-use Symfony\Component\Config\FileLocator;
+-
+-class AcmeDemoExtension extends Extension
+-{
+-    public function load(array $configs, ContainerBuilder $container)
+-    {
+-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+-        $loader->load('services.xml');
+-    }
+-
+-    public function getAlias()
+-    {
+-        return 'acme_demo';
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/EventListener/ControllerListener.php b/src/Acme/DemoBundle/EventListener/ControllerListener.php
+deleted file mode 100644
+index aa117d7..0000000
+--- a/src/Acme/DemoBundle/EventListener/ControllerListener.php
++++ /dev/null
+@@ -1,24 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\EventListener;
+-
+-use Symfony\Component\HttpKernel\HttpKernelInterface;
+-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+-use Acme\DemoBundle\Twig\Extension\DemoExtension;
+-
+-class ControllerListener
+-{
+-    protected $extension;
+-
+-    public function __construct(DemoExtension $extension)
+-    {
+-        $this->extension = $extension;
+-    }
+-
+-    public function onKernelController(FilterControllerEvent $event)
+-    {
+-        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+-            $this->extension->setController($event->getController());
+-        }
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/Form/ContactType.php b/src/Acme/DemoBundle/Form/ContactType.php
+deleted file mode 100644
+index 2c76cdb..0000000
+--- a/src/Acme/DemoBundle/Form/ContactType.php
++++ /dev/null
+@@ -1,20 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\Form;
+-
+-use Symfony\Component\Form\AbstractType;
+-use Symfony\Component\Form\FormBuilderInterface;
+-
+-class ContactType extends AbstractType
+-{
+-    public function buildForm(FormBuilderInterface $builder, array $options)
+-    {
+-        $builder->add('email', 'email');
+-        $builder->add('message', 'textarea');
+-    }
+-
+-    public function getName()
+-    {
+-        return 'contact';
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/Resources/config/routing.yml b/src/Acme/DemoBundle/Resources/config/routing.yml
+deleted file mode 100644
+index 3402ca1..0000000
+--- a/src/Acme/DemoBundle/Resources/config/routing.yml
++++ /dev/null
+@@ -1,12 +0,0 @@
+-_welcome:
+-    pattern:  /
+-    defaults: { _controller: AcmeDemoBundle:Welcome:index }
+-
+-_demo_secured:
+-    resource: "@AcmeDemoBundle/Controller/SecuredController.php"
+-    type:     annotation
+-
+-_demo:
+-    resource: "@AcmeDemoBundle/Controller/DemoController.php"
+-    type:     annotation
+-    prefix:   /demo
+\ No newline at end of file
+diff --git a/src/Acme/DemoBundle/Resources/config/services.xml b/src/Acme/DemoBundle/Resources/config/services.xml
+deleted file mode 100644
+index d6274ce..0000000
+--- a/src/Acme/DemoBundle/Resources/config/services.xml
++++ /dev/null
+@@ -1,18 +0,0 @@
+-<?xml version="1.0" ?>
+-
+-<container xmlns="http://symfony.com/schema/dic/services"
+-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+-
+-    <services>
+-        <service id="twig.extension.acme.demo" class="Acme\DemoBundle\Twig\Extension\DemoExtension" public="false">
+-            <tag name="twig.extension" />
+-            <argument type="service" id="twig.loader" />
+-        </service>
+-
+-        <service id="acme.demo.listener" class="Acme\DemoBundle\EventListener\ControllerListener">
+-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
+-            <argument type="service" id="twig.extension.acme.demo" />
+-        </service>
+-    </services>
+-</container>
+diff --git a/src/Acme/DemoBundle/Resources/public/css/demo.css b/src/Acme/DemoBundle/Resources/public/css/demo.css
+deleted file mode 100644
+index 4dd2f16..0000000
+--- a/src/Acme/DemoBundle/Resources/public/css/demo.css
++++ /dev/null
+@@ -1,101 +0,0 @@
+-body {
+-    font-size: 14px;
+-    font-family: "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+-}
+-h1.title {
+-    font-size: 45px;
+-    padding-bottom: 30px;
+-}
+-.sf-reset h2 {
+-    font-weight:   bold;
+-    color:         #FFFFFF;
+-    /* Font is duplicated of body (sans-serif) */
+-    font-family:      "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+-
+-    margin-bottom:    10px;
+-    background-color: #aacd4e;
+-    padding:          2px 4px;
+-    display:          inline-block;
+-    text-transform:   uppercase;
+-
+-}
+-p {
+-    line-height:    20px;
+-    padding-bottom: 20px;
+-}
+-ul#demo-list a {
+-    background: url(../images/blue-arrow.png) no-repeat right 6px;
+-    padding-right: 10px;
+-    margin-right:  30px;
+-}
+-#symfony-header {
+-    position: relative;
+-    padding: 30px 30px 20px 30px;
+-}
+-.sf-reset .symfony-blocks-welcome {
+-    overflow: hidden;
+-}
+-.sf-reset .symfony-blocks-welcome > div {
+-    background-color: whitesmoke;
+-    float:            left;
+-    width:            240px;
+-    margin-right:     14px;
+-    text-align:       center;
+-    padding:          26px 20px;
+-}
+-.sf-reset .symfony-blocks-welcome > div.block-demo {
+-    margin-right: 0;
+-}
+-.sf-reset .symfony-blocks-welcome .illustration {
+-    padding-bottom: 20px;
+-}
+-.sf-reset .symfony-blocks-help {
+-    overflow: hidden;
+-}
+-.sf-reset .symfony-blocks-help {
+-    margin-top: 30px;
+-    padding:    18px;
+-    border:     1px solid #E6E6E6;
+-}
+-.sf-reset .symfony-blocks-help > div {
+-    width:        254px;
+-    float:        left;
+-}
+-.flash-message {
+-    padding: 10px;
+-    margin: 5px;
+-    margin-top: 15px;
+-    background-color: #ffe;
+-}
+-.sf-reset .error {
+-    color: red;
+-}
+-#login label, #contact_form label {
+-    display: block;
+-    float: left;
+-    width: 90px;
+-}
+-.sf-reset ul#menu {
+-    float: right;
+-    margin-bottom: 20px;
+-    padding-left: 0;
+-}
+-.sf-reset #menu li {
+-    padding-left: 0;
+-    margin-right: 10px;
+-    display: inline;
+-}
+-.sf-reset a,
+-.sf-reset li a {
+-    color: #08C;
+-    text-decoration: none;
+-}
+-.sf-reset a:hover,
+-.sf-reset li a:hover {
+-    color: #08C;
+-    text-decoration: underline;
+-}
+-.sf-reset .symfony-content pre {
+-    white-space: pre;
+-    font-family: monospace;
+-}
+diff --git a/src/Acme/DemoBundle/Resources/public/images/blue-arrow.png b/src/Acme/DemoBundle/Resources/public/images/blue-arrow.png
+deleted file mode 100644
+index fa82d4b..0000000
+Binary files a/src/Acme/DemoBundle/Resources/public/images/blue-arrow.png and /dev/null differ
+diff --git a/src/Acme/DemoBundle/Resources/public/images/field-background.gif b/src/Acme/DemoBundle/Resources/public/images/field-background.gif
+deleted file mode 100644
+index 7c0efc1..0000000
+Binary files a/src/Acme/DemoBundle/Resources/public/images/field-background.gif and /dev/null differ
+diff --git a/src/Acme/DemoBundle/Resources/public/images/logo.gif b/src/Acme/DemoBundle/Resources/public/images/logo.gif
+deleted file mode 100644
+index 703cf45..0000000
+Binary files a/src/Acme/DemoBundle/Resources/public/images/logo.gif and /dev/null differ
+diff --git a/src/Acme/DemoBundle/Resources/public/images/search.png b/src/Acme/DemoBundle/Resources/public/images/search.png
+deleted file mode 100644
+index 3c88b6a..0000000
+Binary files a/src/Acme/DemoBundle/Resources/public/images/search.png and /dev/null differ
+diff --git a/src/Acme/DemoBundle/Resources/public/images/welcome-configure.gif b/src/Acme/DemoBundle/Resources/public/images/welcome-configure.gif
+deleted file mode 100644
+index 931179a..0000000
+Binary files a/src/Acme/DemoBundle/Resources/public/images/welcome-configure.gif and /dev/null differ
+diff --git a/src/Acme/DemoBundle/Resources/public/images/welcome-demo.gif b/src/Acme/DemoBundle/Resources/public/images/welcome-demo.gif
+deleted file mode 100644
+index 0623de5..0000000
+Binary files a/src/Acme/DemoBundle/Resources/public/images/welcome-demo.gif and /dev/null differ
+diff --git a/src/Acme/DemoBundle/Resources/public/images/welcome-quick-tour.gif b/src/Acme/DemoBundle/Resources/public/images/welcome-quick-tour.gif
+deleted file mode 100644
+index b9018b1..0000000
+Binary files a/src/Acme/DemoBundle/Resources/public/images/welcome-quick-tour.gif and /dev/null differ
+diff --git a/src/Acme/DemoBundle/Resources/views/Demo/contact.html.twig b/src/Acme/DemoBundle/Resources/views/Demo/contact.html.twig
+deleted file mode 100644
+index e5b7523..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Demo/contact.html.twig
++++ /dev/null
+@@ -1,15 +0,0 @@
+-{% extends "AcmeDemoBundle::layout.html.twig" %}
+-
+-{% block title "Symfony - Contact form" %}
+-
+-{% block content %}
+-    <form action="{{ path('_demo_contact') }}" method="POST" id="contact_form">
+-        {{ form_errors(form) }}
+-
+-        {{ form_row(form.email) }}
+-        {{ form_row(form.message) }}
+-
+-        {{ form_rest(form) }}
+-        <input type="submit" value="Send" class="symfony-button-grey" />
+-    </form>
+-{% endblock %}
+diff --git a/src/Acme/DemoBundle/Resources/views/Demo/hello.html.twig b/src/Acme/DemoBundle/Resources/views/Demo/hello.html.twig
+deleted file mode 100644
+index 3997ff6..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Demo/hello.html.twig
++++ /dev/null
+@@ -1,9 +0,0 @@
+-{% extends "AcmeDemoBundle::layout.html.twig" %}
+-
+-{% block title "Hello " ~ name %}
+-
+-{% block content %}
+-    <h1>Hello {{ name }}!</h1>
+-{% endblock %}
+-
+-{% set code = code(_self) %}
+diff --git a/src/Acme/DemoBundle/Resources/views/Demo/index.html.twig b/src/Acme/DemoBundle/Resources/views/Demo/index.html.twig
+deleted file mode 100644
+index 454a320..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Demo/index.html.twig
++++ /dev/null
+@@ -1,14 +0,0 @@
+-{% extends "AcmeDemoBundle::layout.html.twig" %}
+-
+-{% block title "Symfony - Demos" %}
+-
+-{% block content_header '' %}
+-
+-{% block content %}
+-    <h1 class="title">Available demos</h1>
+-    <ul id="demo-list">
+-        <li><a href="{{ path('_demo_hello', {'name': 'World'}) }}">Hello World</a></li>
+-        <li><a href="{{ path('_demo_secured_hello', {'name': 'World'}) }}">Access the secured area</a> <a href="{{ path('_demo_login') }}">Go to the login page</a></li>
+-        {# <li><a href="{{ path('_demo_contact') }}">Send a Message</a></li> #}
+-    </ul>
+-{% endblock %}
+diff --git a/src/Acme/DemoBundle/Resources/views/Secured/hello.html.twig b/src/Acme/DemoBundle/Resources/views/Secured/hello.html.twig
+deleted file mode 100644
+index faf95cf..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Secured/hello.html.twig
++++ /dev/null
+@@ -1,11 +0,0 @@
+-{% extends "AcmeDemoBundle:Secured:layout.html.twig" %}
+-
+-{% block title "Hello " ~ name %}
+-
+-{% block content %}
+-    <h1 class="title">Hello {{ name }}!</h1>
+-
+-    <a href="{{ path('_demo_secured_hello_admin', { 'name': name }) }}">Hello resource secured for <strong>admin</strong> only.</a>
+-{% endblock %}
+-
+-{% set code = code(_self) %}
+diff --git a/src/Acme/DemoBundle/Resources/views/Secured/helloadmin.html.twig b/src/Acme/DemoBundle/Resources/views/Secured/helloadmin.html.twig
+deleted file mode 100644
+index 4e3649f..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Secured/helloadmin.html.twig
++++ /dev/null
+@@ -1,9 +0,0 @@
+-{% extends "AcmeDemoBundle:Secured:layout.html.twig" %}
+-
+-{% block title "Hello " ~ name %}
+-
+-{% block content %}
+-    <h1 class="title">Hello {{ name }} secured for Admins only!</h1>
+-{% endblock %}
+-
+-{% set code = code(_self) %}
+diff --git a/src/Acme/DemoBundle/Resources/views/Secured/layout.html.twig b/src/Acme/DemoBundle/Resources/views/Secured/layout.html.twig
+deleted file mode 100644
+index aeea55c..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Secured/layout.html.twig
++++ /dev/null
+@@ -1,6 +0,0 @@
+-{% extends "AcmeDemoBundle::layout.html.twig" %}
+-
+-{% block content_header_more %}
+-    {{ parent() }}
+-    <li>logged in as <strong>{{ app.user ? app.user.username : 'Anonymous' }}</strong> - <a href="{{ path('_demo_logout') }}">Logout</a></li>
+-{% endblock %}
+diff --git a/src/Acme/DemoBundle/Resources/views/Secured/login.html.twig b/src/Acme/DemoBundle/Resources/views/Secured/login.html.twig
+deleted file mode 100644
+index e74a5aa..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Secured/login.html.twig
++++ /dev/null
+@@ -1,35 +0,0 @@
+-{% extends 'AcmeDemoBundle::layout.html.twig' %}
+-
+-{% block content %}
+-    <h1 class="title">Login</h1>
+-
+-    <p>
+-        Choose between two default users: <em>user/userpass</em> <small>(ROLE_USER)</small> or <em>admin/adminpass</em> <small>(ROLE_ADMIN)</small>
+-    </p>
+-
+-    {% if error %}
+-        <div class="error">{{ error.message }}</div>
+-    {% endif %}
+-
+-    <form action="{{ path("_security_check") }}" method="post" id="login">
+-        <div>
+-            <label for="username">Username</label>
+-            <input type="text" id="username" name="_username" value="{{ last_username }}" />
+-        </div>
+-
+-        <div>
+-            <label for="password">Password</label>
+-            <input type="password" id="password" name="_password" />
+-        </div>
+-
+-        <button type="submit" class="sf-button">
+-            <span class="border-l">
+-                <span class="border-r">
+-                    <span class="btn-bg">Login</span>
+-                </span>
+-            </span>
+-        </button>
+-    </form>
+-{% endblock %}
+-
+-{% set code = code(_self) %}
+diff --git a/src/Acme/DemoBundle/Resources/views/Welcome/index.html.twig b/src/Acme/DemoBundle/Resources/views/Welcome/index.html.twig
+deleted file mode 100644
+index ea3a729..0000000
+--- a/src/Acme/DemoBundle/Resources/views/Welcome/index.html.twig
++++ /dev/null
+@@ -1,83 +0,0 @@
+-{% extends 'AcmeDemoBundle::layout.html.twig' %}
+-
+-{% block title %}Symfony - Welcome{% endblock %}
+-
+-{% block content_header '' %}
+-
+-{% block content %}
+-    {% set version = constant('Symfony\\Component\\HttpKernel\\Kernel::MAJOR_VERSION') ~ '.' ~ constant('Symfony\\Component\\HttpKernel\\Kernel::MINOR_VERSION')%}
+-
+-    <h1 class="title">Welcome!</h1>
+-
+-    <p>Congratulations! You have successfully installed a new Symfony application.</p>
+-
+-    <div class="symfony-blocks-welcome">
+-        <div class="block-quick-tour">
+-            <div class="illustration">
+-                <img src="{{ asset('bundles/acmedemo/images/welcome-quick-tour.gif') }}" alt="Quick tour" />
+-            </div>
+-            <a href="http://symfony.com/doc/{{ version }}/quick_tour/index.html" class="sf-button sf-button-selected">
+-                <span class="border-l">
+-                    <span class="border-r">
+-                        <span class="btn-bg">Read the Quick Tour</span>
+-                    </span>
+-                </span>
+-            </a>
+-        </div>
+-        {% if app.environment == 'dev' %}
+-            <div class="block-configure">
+-                <div class="illustration">
+-                    <img src="{{ asset('bundles/acmedemo/images/welcome-configure.gif') }}" alt="Configure your application" />
+-                </div>
+-                <a href="{{ path('_configurator_home') }}" class="sf-button sf-button-selected">
+-                    <span class="border-l">
+-                        <span class="border-r">
+-                            <span class="btn-bg">Configure</span>
+-                        </span>
+-                    </span>
+-                </a>
+-            </div>
+-        {% endif %}
+-        <div class="block-demo">
+-            <div class="illustration">
+-                <img src="{{ asset('bundles/acmedemo/images/welcome-demo.gif') }}" alt="Demo" />
+-            </div>
+-            <a href="{{ path('_demo') }}" class="sf-button sf-button-selected">
+-                <span class="border-l">
+-                    <span class="border-r">
+-                        <span class="btn-bg">Run The Demo</span>
+-                    </span>
+-                </span>
+-            </a>
+-        </div>
+-    </div>
+-
+-    <div class="symfony-blocks-help">
+-        <div class="block-documentation">
+-            <ul>
+-                <li><strong>Documentation</strong></li>
+-                <li><a href="http://symfony.com/doc/{{ version }}/book/index.html">The Book</a></li>
+-                <li><a href="http://symfony.com/doc/{{ version }}/cookbook/index.html">The Cookbook</a></li>
+-                <li><a href="http://symfony.com/doc/{{ version }}/components/index.html">The Components</a></li>
+-                <li><a href="http://symfony.com/doc/{{ version }}/reference/index.html">Reference</a></li>
+-                <li><a href="http://symfony.com/doc/{{ version }}/glossary.html">Glossary</a></li>
+-            </ul>
+-        </div>
+-        <div class="block-documentation-more">
+-            <ul>
+-                <li><strong>Sensio</strong></li>
+-                <li><a href="http://trainings.sensiolabs.com">Trainings</a></li>
+-                <li><a href="http://books.sensiolabs.com">Books</a></li>
+-            </ul>
+-        </div>
+-        <div class="block-community">
+-            <ul>
+-                <li><strong>Community</strong></li>
+-                <li><a href="http://symfony.com/irc">IRC channel</a></li>
+-                <li><a href="http://symfony.com/mailing-lists">Mailing lists</a></li>
+-                <li><a href="http://forum.symfony-project.org">Forum</a></li>
+-                <li><a href="http://symfony.com/doc/{{ version }}/contributing/index.html">Contributing</a></li>
+-            </ul>
+-        </div>
+-    </div>
+-{% endblock %}
+diff --git a/src/Acme/DemoBundle/Resources/views/layout.html.twig b/src/Acme/DemoBundle/Resources/views/layout.html.twig
+deleted file mode 100644
+index d7e97d5..0000000
+--- a/src/Acme/DemoBundle/Resources/views/layout.html.twig
++++ /dev/null
+@@ -1,37 +0,0 @@
+-{% extends "TwigBundle::layout.html.twig" %}
+-
+-{% block head %}
+-    <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}" />
+-    <link rel="stylesheet" href="{{ asset('bundles/acmedemo/css/demo.css') }}" />
+-{% endblock %}
+-
+-{% block title 'Demo Bundle' %}
+-
+-{% block body %}
+-    {% for flashMessage in app.session.flashbag.get('notice') %}
+-        <div class="flash-message">
+-            <em>Notice</em>: {{ flashMessage }}
+-        </div>
+-    {% endfor %}
+-
+-    {% block content_header %}
+-        <ul id="menu">
+-            {% block content_header_more %}
+-                <li><a href="{{ path('_demo') }}">Demo Home</a></li>
+-            {% endblock %}
+-        </ul>
+-
+-        <div style="clear: both"></div>
+-    {% endblock %}
+-
+-    <div class="block">
+-        {% block content %}{% endblock %}
+-    </div>
+-
+-    {% if code is defined %}
+-        <h2>Code behind this page</h2>
+-        <div class="block">
+-            <div class="symfony-content">{{ code|raw }}</div>
+-        </div>
+-    {% endif %}
+-{% endblock %}
+diff --git a/src/Acme/DemoBundle/Tests/Controller/DemoControllerTest.php b/src/Acme/DemoBundle/Tests/Controller/DemoControllerTest.php
+deleted file mode 100644
+index d217689..0000000
+--- a/src/Acme/DemoBundle/Tests/Controller/DemoControllerTest.php
++++ /dev/null
+@@ -1,45 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\Tests\Controller;
+-
+-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+-
+-class DemoControllerTest extends WebTestCase
+-{
+-    public function testIndex()
+-    {
+-        $client = static::createClient();
+-
+-        $crawler = $client->request('GET', '/demo/hello/Fabien');
+-
+-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Hello Fabien")')->count());
+-    }
+-
+-    public function testSecureSection()
+-    {
+-        $client = static::createClient();
+-
+-        // goes to the secure page
+-        $crawler = $client->request('GET', '/demo/secured/hello/World');
+-
+-        // redirects to the login page
+-        $crawler = $client->followRedirect();
+-
+-        // submits the login form
+-        $form = $crawler->selectButton('Login')->form(array('_username' => 'admin', '_password' => 'adminpass'));
+-        $client->submit($form);
+-
+-        // redirect to the original page (but now authenticated)
+-        $crawler = $client->followRedirect();
+-
+-        // check that the page is the right one
+-        $this->assertCount(1, $crawler->filter('h1.title:contains("Hello World!")'));
+-
+-        // click on the secure link
+-        $link = $crawler->selectLink('Hello resource secured')->link();
+-        $crawler = $client->click($link);
+-
+-        // check that the page is the right one
+-        $this->assertCount(1, $crawler->filter('h1.title:contains("secured for Admins only!")'));
+-    }
+-}
+diff --git a/src/Acme/DemoBundle/Twig/Extension/DemoExtension.php b/src/Acme/DemoBundle/Twig/Extension/DemoExtension.php
+deleted file mode 100644
+index def0757..0000000
+--- a/src/Acme/DemoBundle/Twig/Extension/DemoExtension.php
++++ /dev/null
+@@ -1,81 +0,0 @@
+-<?php
+-
+-namespace Acme\DemoBundle\Twig\Extension;
+-
+-use CG\Core\ClassUtils;
+-
+-class DemoExtension extends \Twig_Extension
+-{
+-    protected $loader;
+-    protected $controller;
+-
+-    public function __construct(\Twig_LoaderInterface $loader)
+-    {
+-        $this->loader = $loader;
+-    }
+-
+-    public function setController($controller)
+-    {
+-        $this->controller = $controller;
+-    }
+-
+-    /**
+-     * {@inheritdoc}
+-     */
+-    public function getFunctions()
+-    {
+-        return array(
+-            new \Twig_SimpleFunction('code', array($this, 'getCode'), array('is_safe' => array('html'))),
+-        );
+-    }
+-
+-    public function getCode($template)
+-    {
+-        // highlight_string highlights php code only if '<?php' tag is present.
+-        $controller = highlight_string("<?php" . $this->getControllerCode(), true);
+-        $controller = str_replace('<span style="color: #0000BB">&lt;?php&nbsp;&nbsp;&nbsp;&nbsp;</span>', '&nbsp;&nbsp;&nbsp;&nbsp;', $controller);
+-
+-        $template = htmlspecialchars($this->getTemplateCode($template), ENT_QUOTES, 'UTF-8');
+-
+-        // remove the code block
+-        $template = str_replace('{% set code = code(_self) %}', '', $template);
+-
+-        return <<<EOF
+-<p><strong>Controller Code</strong></p>
+-<pre>$controller</pre>
+-
+-<p><strong>Template Code</strong></p>
+-<pre>$template</pre>
+-EOF;
+-    }
+-
+-    protected function getControllerCode()
+-    {
+-        $class = get_class($this->controller[0]);
+-        if (class_exists('CG\Core\ClassUtils')) {
+-            $class = ClassUtils::getUserClass($class);
+-        }
+-
+-        $r = new \ReflectionClass($class);
+-        $m = $r->getMethod($this->controller[1]);
+-
+-        $code = file($r->getFilename());
+-
+-        return '    '.$m->getDocComment()."\n".implode('', array_slice($code, $m->getStartline() - 1, $m->getEndLine() - $m->getStartline() + 1));
+-    }
+-
+-    protected function getTemplateCode($template)
+-    {
+-        return $this->loader->getSource($template->getTemplateName());
+-    }
+-
+-    /**
+-     * Returns the name of the extension.
+-     *
+-     * @return string The extension name
+-     */
+-    public function getName()
+-    {
+-        return 'demo';
+-    }
+-}
