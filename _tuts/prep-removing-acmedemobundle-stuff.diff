@@ -486,34 +486,6 @@ index 4dd2f16..0000000
 -    white-space: pre;
 -    font-family: monospace;
 -}
-diff --git a/src/Acme/DemoBundle/Resources/public/images/blue-arrow.png b/src/Acme/DemoBundle/Resources/public/images/blue-arrow.png
-deleted file mode 100644
-index fa82d4b..0000000
-Binary files a/src/Acme/DemoBundle/Resources/public/images/blue-arrow.png and /dev/null differ
-diff --git a/src/Acme/DemoBundle/Resources/public/images/field-background.gif b/src/Acme/DemoBundle/Resources/public/images/field-background.gif
-deleted file mode 100644
-index 7c0efc1..0000000
-Binary files a/src/Acme/DemoBundle/Resources/public/images/field-background.gif and /dev/null differ
-diff --git a/src/Acme/DemoBundle/Resources/public/images/logo.gif b/src/Acme/DemoBundle/Resources/public/images/logo.gif
-deleted file mode 100644
-index 703cf45..0000000
-Binary files a/src/Acme/DemoBundle/Resources/public/images/logo.gif and /dev/null differ
-diff --git a/src/Acme/DemoBundle/Resources/public/images/search.png b/src/Acme/DemoBundle/Resources/public/images/search.png
-deleted file mode 100644
-index 3c88b6a..0000000
-Binary files a/src/Acme/DemoBundle/Resources/public/images/search.png and /dev/null differ
-diff --git a/src/Acme/DemoBundle/Resources/public/images/welcome-configure.gif b/src/Acme/DemoBundle/Resources/public/images/welcome-configure.gif
-deleted file mode 100644
-index 931179a..0000000
-Binary files a/src/Acme/DemoBundle/Resources/public/images/welcome-configure.gif and /dev/null differ
-diff --git a/src/Acme/DemoBundle/Resources/public/images/welcome-demo.gif b/src/Acme/DemoBundle/Resources/public/images/welcome-demo.gif
-deleted file mode 100644
-index 0623de5..0000000
-Binary files a/src/Acme/DemoBundle/Resources/public/images/welcome-demo.gif and /dev/null differ
-diff --git a/src/Acme/DemoBundle/Resources/public/images/welcome-quick-tour.gif b/src/Acme/DemoBundle/Resources/public/images/welcome-quick-tour.gif
-deleted file mode 100644
-index b9018b1..0000000
-Binary files a/src/Acme/DemoBundle/Resources/public/images/welcome-quick-tour.gif and /dev/null differ
 diff --git a/src/Acme/DemoBundle/Resources/views/Demo/contact.html.twig b/src/Acme/DemoBundle/Resources/views/Demo/contact.html.twig
 deleted file mode 100644
 index e5b7523..0000000
