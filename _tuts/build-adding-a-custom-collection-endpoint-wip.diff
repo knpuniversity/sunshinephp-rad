@@ -1,0 +1,42 @@
+diff --git a/src/App/Controller/TeamController.php b/src/App/Controller/TeamController.php
+index cdb2adc..cccd347 100644
+--- a/src/App/Controller/TeamController.php
++++ b/src/App/Controller/TeamController.php
+@@ -2,6 +2,7 @@
+ 
+ namespace App\Controller;
+ 
++use Symfony\Component\HttpFoundation\JsonResponse;
+ use Symfony\Component\HttpFoundation\Request;
+ use App\Entity\Team;
+ use Knp\RadBundle\Controller\Controller;
+@@ -65,6 +66,11 @@ class TeamController extends Controller
+         return ['form' => $form->createView(), 'team' => $team];
+     }
+ 
++    public function reportAction()
++    {
++        return new JsonResponse(array());
++    }
++
+     public function deleteAction(Team $team)
+     {
+         $this->remove($team, true);
+diff --git a/src/App/Resources/config/routing.yml b/src/App/Resources/config/routing.yml
+index ce03f4e..cd4acac 100644
+--- a/src/App/Resources/config/routing.yml
++++ b/src/App/Resources/config/routing.yml
+@@ -1,4 +1,11 @@
+ App:Team:
++    collections:
++        index: ~
++        new: ~
++        create: ~
++        report:
++            pattern: /report.json
++            defaults: { _format: json }
+     defaults:
+         _resources:
+-            "teams": {service: "app.entity.team_repository", method: "findAll"}
+\ No newline at end of file
++            "teams": {service: "app.entity.team_repository", method: "findAll"}
