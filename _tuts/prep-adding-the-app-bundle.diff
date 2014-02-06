@@ -1,0 +1,34 @@
+diff --git a/app/AppKernel.php b/app/AppKernel.php
+index 377ff12..44bb880 100644
+--- a/app/AppKernel.php
++++ b/app/AppKernel.php
+@@ -16,8 +16,13 @@ class AppKernel extends Kernel
+             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
++
++            // 3rd party bundles
+             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+-            new \Knp\RadBundle\KnpRadBundle()
++            new \Knp\RadBundle\KnpRadBundle(),
++
++            // my bundles
++            new App\App(),
+         );
+ 
+         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+diff --git a/src/App/App.php b/src/App/App.php
+new file mode 100644
+index 0000000..b06fe0f
+--- /dev/null
++++ b/src/App/App.php
+@@ -0,0 +1,9 @@
++<?php
++
++namespace App;
++
++use Knp\RadBundle\AppBundle\Bundle;
++
++class App extends Bundle
++{
++}
