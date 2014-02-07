@@ -24,7 +24,7 @@ index 91455e3..abcec31 100644
 +    locations:
 +        bundles: [App]
 diff --git a/composer.json b/composer.json
-index 9f0bf30..be3be16 100644
+index 45f4434..903ca17 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -21,7 +21,8 @@
@@ -38,15 +38,15 @@ index 9f0bf30..be3be16 100644
      "require-dev": {
          "behat/behat": "~2.5.1",
 diff --git a/composer.lock b/composer.lock
-index 7c6a0bd..b0a9091 100644
+index 2a48135..201bd43 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -3,7 +3,7 @@
          "This file locks the dependencies of your project to a known state",
          "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
      ],
--    "hash": "0e1e7660c2de817111b4cfbf34334f09",
-+    "hash": "6da8e3a1fa0290ced2e060abe6676c37",
+-    "hash": "de4c4bf315d3fa7d85c2a00a2772ed1c",
++    "hash": "75eabb6f710914f1caf5e1c329482580",
      "packages": [
          {
              "name": "doctrine/annotations",
@@ -266,45 +266,6 @@ index 7c6a0bd..b0a9091 100644
              "name": "knplabs/rad-bundle",
              "version": "v2.3.2",
              "target-dir": "Knp/RadBundle",
-@@ -1196,16 +1405,16 @@
-         },
-         {
-             "name": "nelmio/alice",
--            "version": "1.5.2",
-+            "version": "1.6.0",
-             "source": {
-                 "type": "git",
-                 "url": "https://github.com/nelmio/alice.git",
--                "reference": "15c66e38d077bd707aa0acacb95cbc083e8261ea"
-+                "reference": "e225020d8e1f0ca867b4219698d6089b7a997761"
-             },
-             "dist": {
-                 "type": "zip",
--                "url": "https://api.github.com/repos/nelmio/alice/zipball/15c66e38d077bd707aa0acacb95cbc083e8261ea",
--                "reference": "15c66e38d077bd707aa0acacb95cbc083e8261ea",
-+                "url": "https://api.github.com/repos/nelmio/alice/zipball/e225020d8e1f0ca867b4219698d6089b7a997761",
-+                "reference": "e225020d8e1f0ca867b4219698d6089b7a997761",
-                 "shasum": ""
-             },
-             "require": {
-@@ -1221,7 +1430,7 @@
-             "type": "library",
-             "extra": {
-                 "branch-alias": {
--                    "dev-master": "1.5.x-dev"
-+                    "dev-master": "1.6.x-dev"
-                 }
-             },
-             "autoload": {
-@@ -1246,7 +1455,7 @@
-                 "orm",
-                 "test"
-             ],
--            "time": "2013-08-07 13:12:13"
-+            "time": "2014-02-05 22:35:38"
-         },
-         {
-             "name": "psr/log",
 diff --git a/src/App/Controller/TeamController.php b/src/App/Controller/TeamController.php
 index cccd347..96516a3 100644
 --- a/src/App/Controller/TeamController.php
