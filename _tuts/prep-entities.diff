@@ -1,9 +1,9 @@
 diff --git a/src/App/Entity/Player.php b/src/App/Entity/Player.php
 new file mode 100644
-index 0000000..e09471c
+index 0000000..e7af20a
 --- /dev/null
 +++ b/src/App/Entity/Player.php
-@@ -0,0 +1,147 @@
+@@ -0,0 +1,152 @@
 +<?php
 +
 +namespace App\Entity;
@@ -150,18 +150,23 @@ index 0000000..e09471c
 +    {
 +        $this->team = $team;
 +    }
++
++    public function __toString()
++    {
++        return $this->getFirstName().' '.$this->getLastName();
++    }
 +}
 diff --git a/src/App/Entity/PlayerRepository.php b/src/App/Entity/PlayerRepository.php
 new file mode 100644
-index 0000000..18db403
+index 0000000..7ac29f9
 --- /dev/null
 +++ b/src/App/Entity/PlayerRepository.php
-@@ -0,0 +1,15 @@
+@@ -0,0 +1,25 @@
 +<?php
 +
 +namespace App\Entity;
 +
-+use Doctrine\ORM\EntityRepository;
++use Knp\RadBundle\Doctrine\EntityRepository;
 +
 +/**
 + * PlayerRepository
@@ -171,10 +176,20 @@ index 0000000..18db403
 + */
 +class PlayerRepository extends EntityRepository
 +{
++    public function getCaptainForTeam(Team $team)
++    {
++        return $this->build()
++            ->andWhere($this->getAlias().'.team = :team')
++            ->setParameter('team', $team)
++            ->setMaxResults(1)
++            ->getQuery()
++            ->getOneOrNullResult()
++        ;
++    }
 +}
 diff --git a/src/App/Entity/Team.php b/src/App/Entity/Team.php
 new file mode 100644
-index 0000000..2d32dec
+index 0000000..effa912
 --- /dev/null
 +++ b/src/App/Entity/Team.php
 @@ -0,0 +1,138 @@
@@ -220,7 +235,7 @@ index 0000000..2d32dec
 +     *
 +     * @ORM\Column(name="isActive", type="boolean")
 +     */
-+    private $isActive;
++    private $isActive = true;
 +
 +    /**
 +     * @var Player[]
