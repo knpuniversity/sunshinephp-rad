@@ -1,3 +1,9 @@
 app:
     resource: "@App/Resources/config/routing.yml"
     type:     "rad_convention"
+
+homepage:
+    path: /
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: App:Default:homepage.html.twig
