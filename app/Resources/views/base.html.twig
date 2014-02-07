@@ -45,6 +45,15 @@
 
 <div class="container">
 
+    {% block flashes %}
+        {% flashes %}
+            <div class="alert alert-{{ type }}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endflashes %}
+    {% endblock %}
+
     {% block body %}{% endblock %}
 
 </div>

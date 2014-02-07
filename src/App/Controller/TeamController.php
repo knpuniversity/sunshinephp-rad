@@ -35,7 +35,7 @@ class TeamController extends Controller
 
         if ($form->isValid()) {
             $this->persist($team, true);
-            $this->addFlash('success');
+            $this->addFlash('success', 'Your team was updated!');
 
             return $this->redirectToRoute('app_team_show', array(
                 'id' => $team->getId()
@@ -55,7 +55,7 @@ class TeamController extends Controller
 
         if ($form->isValid()) {
             $this->persist($team, true);
-            $this->addFlash('success');
+            $this->addFlash('success', 'Team created! Woot!');
 
             return $this->redirectToRoute('app_team_show', array(
                 'id' => $team->getId()
