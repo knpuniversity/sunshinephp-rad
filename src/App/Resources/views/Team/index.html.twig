@@ -6,6 +6,7 @@
             <tr>
                 <th>Name</th>
                 <th># Players</th>
+                <th>Captain</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -14,6 +15,7 @@
                 <tr>
                     <td>{{ team.name }}</td>
                     <td>{{ team.players|length }}</td>
+                    <td>{{ team|captain }}</td>
                     <td>
                         <a href="{{ path('app_team_show', {'id': team.id}) }}">Show</a>
                     </td>
