@@ -1,0 +1,13 @@
+# https://github.com/nelmio/alice
+App\Entity\Player:
+    user{1..50}:
+        firstName: <firstName()>
+        lastName: <lastName()>
+        nickName: <username()>
+        team: @team*
+
+App\Entity\Team:
+    team{1..5}:
+        name: <company()>
+        description: <paragraph()>
+        isActive: true
