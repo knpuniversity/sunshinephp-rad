@@ -57,8 +57,10 @@ doctrine:
         # path:     "%database_path%"
 
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        default_repository_class: Knp\RadBundle\Doctrine\EntityRepository
 
 # Swiftmailer Configuration
 swiftmailer:
