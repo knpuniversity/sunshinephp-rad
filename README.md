@@ -4,6 +4,9 @@ Symfony2 RAD Project for SunshinePHP
 Hi there! This is a simple example project for
 a Symfony2 RAD presentation at SunshinePHP 2014!
 
+The `master` branch is the starting point of the project,
+while the `finish` branch is the finished product.
+
 To get this running:
 
 1) Install via Composer:
