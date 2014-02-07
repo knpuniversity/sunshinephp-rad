@@ -68,7 +68,8 @@ class TeamController extends Controller
 
     public function reportAction()
     {
-        return new JsonResponse(array());
+        $report = $this->container->get('app.teams_report')->generateReport();
+        return new JsonResponse($report);
     }
 
     public function deleteAction(Team $team)

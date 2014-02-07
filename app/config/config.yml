@@ -76,3 +76,7 @@ knp_rad:
 
 mopa_bootstrap:
     form: ~
+
+jms_di_extra:
+    locations:
+        bundles: [App]

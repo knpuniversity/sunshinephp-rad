@@ -21,6 +21,8 @@ class AppKernel extends Kernel
             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new \Knp\RadBundle\KnpRadBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
+            new JMS\AopBundle\JMSAopBundle(),
 
             // my bundles
             new App\App(),
