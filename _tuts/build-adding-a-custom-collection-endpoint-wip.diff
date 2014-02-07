@@ -23,7 +23,7 @@ index cdb2adc..cccd347 100644
      {
          $this->remove($team, true);
 diff --git a/src/App/Resources/config/routing.yml b/src/App/Resources/config/routing.yml
-index ce03f4e..cd4acac 100644
+index 6b13e34..cd4acac 100644
 --- a/src/App/Resources/config/routing.yml
 +++ b/src/App/Resources/config/routing.yml
 @@ -1,4 +1,11 @@
@@ -37,6 +37,4 @@ index ce03f4e..cd4acac 100644
 +            defaults: { _format: json }
      defaults:
          _resources:
--            "teams": {service: "app.entity.team_repository", method: "findAll"}
-\ No newline at end of file
-+            "teams": {service: "app.entity.team_repository", method: "findAll"}
+             "teams": {service: "app.entity.team_repository", method: "findAll"}
