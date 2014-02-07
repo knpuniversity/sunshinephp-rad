@@ -1,0 +1,27 @@
+diff --git a/app/config/routing.yml b/app/config/routing.yml
+index e3ff3c0..2402d8d 100644
+--- a/app/config/routing.yml
++++ b/app/config/routing.yml
+@@ -1,3 +1,9 @@
+ app:
+     resource: "@App/Resources/config/routing.yml"
+     type:     "rad_convention"
++
++homepage:
++    path: /
++    defaults:
++        _controller: FrameworkBundle:Template:template
++        template: App:Default:homepage.html.twig
+\ No newline at end of file
+diff --git a/src/App/Resources/views/Default/homepage.html.twig b/src/App/Resources/views/Default/homepage.html.twig
+new file mode 100644
+index 0000000..66f1d45
+--- /dev/null
++++ b/src/App/Resources/views/Default/homepage.html.twig
+@@ -0,0 +1,6 @@
++{% extends '::base.html.twig' %}
++
++{% block body %}
++    <h1>Hello!</h1>
++
++{% endblock body %}
