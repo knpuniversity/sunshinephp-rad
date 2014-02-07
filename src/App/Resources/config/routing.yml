@@ -1,4 +1,11 @@
 App:Team:
+    collections:
+        index: ~
+        new: ~
+        create: ~
+        report:
+            pattern: /report.json
+            defaults: { _format: json }
     defaults:
         _resources:
             "teams": {service: "app.entity.team_repository", method: "findAll"}

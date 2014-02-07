@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Team;
 use Knp\RadBundle\Controller\Controller;
@@ -63,6 +64,11 @@ class TeamController extends Controller
         }
 
         return ['form' => $form->createView(), 'team' => $team];
+    }
+
+    public function reportAction()
+    {
+        return new JsonResponse(array());
     }
 
     public function deleteAction(Team $team)
