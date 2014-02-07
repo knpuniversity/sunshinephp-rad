@@ -73,3 +73,6 @@ swiftmailer:
 knp_rad:
     csrf_links:
         enabled: true
+
+mopa_bootstrap:
+    form: ~

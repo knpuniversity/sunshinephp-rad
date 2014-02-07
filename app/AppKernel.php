@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             // 3rd party bundles
             new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
             new \Knp\RadBundle\KnpRadBundle(),
+            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
 
             // my bundles
             new App\App(),
