@@ -74,6 +74,26 @@
             "id": "build-configuring-a-service",
             "name": "Build: Configuring a service",
             "description": null
+        },
+        {
+            "id": "build-configure-without-annotations",
+            "name": "Build: Configure without annotations",
+            "description": null
+        },
+        {
+            "id": "build-twig-extension",
+            "name": "Build: Twig Extension",
+            "description": null
+        },
+        {
+            "id": "behat-adding-feature",
+            "name": "Behat: Adding feature",
+            "description": null
+        },
+        {
+            "id": "build-add-a-homepage",
+            "name": "Build: Add a homepage",
+            "description": null
         }
     ]
 }
