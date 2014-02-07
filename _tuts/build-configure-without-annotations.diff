@@ -1,0 +1,37 @@
+diff --git a/src/App/Report/TeamsReport.php b/src/App/Report/TeamsReport.php
+index 7564e40..7d436d0 100644
+--- a/src/App/Report/TeamsReport.php
++++ b/src/App/Report/TeamsReport.php
+@@ -7,9 +7,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+ use App\Entity\Team;
+ use JMS\DiExtraBundle\Annotation as DI;
+ 
+-/**
+- * @DI\Service("app.teams_report")
+- */
+ class TeamsReport
+ {
+     /**
+@@ -25,10 +22,6 @@ class TeamsReport
+     /**
+      * @param TeamRepository $teamRepo
+      * @param UrlGeneratorInterface $generator
+-     * @DI\InjectParams({
+-     *      "teamRepo" = @DI\Inject("app.entity.team_repository"),
+-     *      "generator" = @DI\Inject("router")
+-     * })
+      */
+     public function __construct(TeamRepository $teamRepo, UrlGeneratorInterface $generator)
+     {
+diff --git a/src/App/Resources/config/services.yml b/src/App/Resources/config/services.yml
+new file mode 100644
+index 0000000..6b29a7f
+--- /dev/null
++++ b/src/App/Resources/config/services.yml
+@@ -0,0 +1,6 @@
++services:
++    app.report.teams_report:
++        class: App\Report\TeamsReport
++        arguments:
++            - "@app.entity.team_repository"
++            - "@router"
