@@ -1,0 +1,6 @@
+services:
+    app.report.teams_report:
+        class: App\Report\TeamsReport
+        arguments:
+            - "@app.entity.team_repository"
+            - "@router"

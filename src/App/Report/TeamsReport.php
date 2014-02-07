@@ -7,9 +7,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Entity\Team;
 use JMS\DiExtraBundle\Annotation as DI;
 
-/**
- * @DI\Service("app.teams_report")
- */
 class TeamsReport
 {
     /**
@@ -25,10 +22,6 @@ class TeamsReport
     /**
      * @param TeamRepository $teamRepo
      * @param UrlGeneratorInterface $generator
-     * @DI\InjectParams({
-     *      "teamRepo" = @DI\Inject("app.entity.team_repository"),
-     *      "generator" = @DI\Inject("router")
-     * })
      */
     public function __construct(TeamRepository $teamRepo, UrlGeneratorInterface $generator)
     {
