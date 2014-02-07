@@ -1,8 +1,61 @@
-diff --git a/src/App/Resources/fixtures/orm/fixtures.yml b/src/App/Resources/fixtures/orm/fixtures.yml
+diff --git a/src/App/DataFixtures/ORM/LoadAliceFixtures.php b/src/App/DataFixtures/ORM/LoadAliceFixtures.php
+new file mode 100644
+index 0000000..59b732c
+--- /dev/null
++++ b/src/App/DataFixtures/ORM/LoadAliceFixtures.php
+@@ -0,0 +1,36 @@
++<?php
++
++namespace App\DataFixtures\ORM;
++
++use Knp\RadBundle\DataFixtures\AbstractFixture;
++use Symfony\Component\Finder\Finder;
++use Doctrine\Common\Persistence\ObjectManager;
++use Nelmio\Alice\Fixtures;
++
++class LoadAliceFixtures extends AbstractFixture
++{
++    public function load(ObjectManager $manager)
++    {
++        $path = __DIR__.'/../../Resources/fixtures';
++
++        foreach ($this->getAliceFiles($path) as $file) {
++            Fixtures::load($file, $manager, $this->getAliceOptions());
++        }
++    }
++
++    protected function getAliceFiles($path)
++    {
++        return Finder::create()
++            ->files()
++            ->name('*.yml')
++            ->depth(0)
++            ->sortByName()
++            ->in($path)
++        ;
++    }
++
++    protected function getAliceOptions()
++    {
++        return array('providers' => array($this));
++    }
++}
+diff --git a/src/App/Resources/config/routing.yml b/src/App/Resources/config/routing.yml
+index ce03f4e..6b13e34 100644
+--- a/src/App/Resources/config/routing.yml
++++ b/src/App/Resources/config/routing.yml
+@@ -1,4 +1,4 @@
+ App:Team:
+     defaults:
+         _resources:
+-            "teams": {service: "app.entity.team_repository", method: "findAll"}
+\ No newline at end of file
++            "teams": {service: "app.entity.team_repository", method: "findAll"}
+diff --git a/src/App/Resources/fixtures/fixtures.yml b/src/App/Resources/fixtures/fixtures.yml
 new file mode 100644
 index 0000000..87d0acc
 --- /dev/null
-+++ b/src/App/Resources/fixtures/orm/fixtures.yml
++++ b/src/App/Resources/fixtures/fixtures.yml
 @@ -0,0 +1,13 @@
 +# https://github.com/nelmio/alice
 +App\Entity\Player:
