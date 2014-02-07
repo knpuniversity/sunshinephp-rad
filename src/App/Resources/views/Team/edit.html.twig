@@ -1,0 +1,10 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+{{ form_start(form, { 'attr': {'class': 'form form-horizontal'} }) }}
+    {{ form_widget(form) }}
+    <input type="submit" class="btn" />
+{{ form_end(form) }}
+
+{% endblock body %}
